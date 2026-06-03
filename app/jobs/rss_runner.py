@@ -2,7 +2,7 @@ from app.db.session import SessionLocal
 from app.jobs.rss_ingestion import RSSIngestionJob
 
 
-def run_rss_job():
+def run_rss_ingestion():
     db = SessionLocal()
     try:
         job = RSSIngestionJob(db)

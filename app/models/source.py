@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy import (
     Boolean,
     DateTime,
+    Enum as SQLEnum,
     Integer,
     String,
     Text,
@@ -11,7 +12,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
-
+from app.enums.source import SourceStatus
 
 class Source(Base):
     __tablename__ = "sources"
@@ -85,9 +86,13 @@ class Source(Base):
         nullable=True,
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        default="active",
+    status: Mapped[SourceStatus] = mapped_column(
+        
+        SQLEnum(
+            SourceStatus,
+            name='source_status_enum',
+         ),
+        default=SourceStatus.ACTIVE,
         nullable=False,
     )
     # active | paused | failed

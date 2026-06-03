@@ -20,7 +20,7 @@ class SourceRepository:
         stmt = select(Source).where(Source.rss_url == rss_url)
         return self.db.scalar(stmt)
 
-    def list(
+    def get_all(
         self,
         offset: int = 0,
         limit: int = 100,

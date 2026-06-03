@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api.v1.entities import router as entities_router
 from app.api.v1.news import router as news_router
+from app.api.v1.sources import router as sources_router
 
 from app.core.scheduler import scheduler
 from app.jobs.rss_runner import run_rss_ingestion
@@ -32,7 +33,7 @@ def shutdown_event():
 
 app.include_router(entities_router)
 app.include_router(news_router)
-
+app.include_router(sources_router)
 
 @app.get("/")
 def health_check():

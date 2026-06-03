@@ -1,13 +1,8 @@
 from datetime import datetime
-from enum import Enum
+
+from app.enums.source import SourceStatus
 
 from pydantic import BaseModel, ConfigDict, HttpUrl
-
-
-class SourceStatus(str, Enum):
-    ACTIVE = "active"
-    PAUSED = "paused"
-    FAILED = "failed"
 
 
 class SourceBase(BaseModel):

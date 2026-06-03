@@ -8,3 +8,5 @@ redis
 httpx
 python-dotenv
 pydantic-settings
+apscheduler
+feedparser

@@ -15,21 +15,21 @@ class SourceService:
     # -------------------------
 
     def create_source(self, data: SourceCreate) -> Source:
-        source = Source(**data.model_dump())
+        source = Source(**data.model_dump(mode="json"))
         return self.repo.create(source)
 
     def get_source(self, source_id: int) -> Source | None:
         return self.repo.get(source_id)
 
     def list_sources(self, offset: int = 0, limit: int = 100) -> list[Source]:
-        return self.repo.list(offset=offset, limit=limit)
+        return self.repo.get_all(offset=offset, limit=limit)
 
     def update_source(self, source_id: int, data: SourceUpdate) -> Source:
         source = self.repo.get(source_id)
         if not source:
             raise ValueError("Source not found")
 
-        update_data = data.model_dump(exclude_unset=True)
+        update_data = data.model_dump(mode="json", exclude_unset=True)
 
         for key, value in update_data.items():
             setattr(source, key, value)
