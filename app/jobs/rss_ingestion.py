@@ -65,10 +65,10 @@ class RSSIngestionJob:
         news = News(
             title=title,
             url=url,
-            content=description,
+            description=description,
             published_date=published_at,
             source_id=source.id,
-            source_name=source.name,  # optional denormalized field
+            entity_id='11111111-1111-1111-1111-111111111111',
             created_at=datetime.now(timezone.utc),
         )
 

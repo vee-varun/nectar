@@ -17,7 +17,6 @@ from sqlalchemy.sql import func
 
 from app.db.base import Base
 
-
 class SentimentEnum(str, Enum):
     POSITIVE = "POSITIVE"
     NEGATIVE = "NEGATIVE"
@@ -56,12 +55,16 @@ class News(Base):
         nullable=True,
     )
 
-    source_name: Mapped[str | None] = mapped_column(
-        String(255),
-        nullable=True,
+    source_id: Mapped[int] = mapped_column(
+        ForeignKey("sources.id"),
+        nullable=False,
         index=True,
     )
 
+    source: Mapped["Source"] = relationship(
+        "Source",
+        back_populates="news",
+    )
     author: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,
@@ -121,7 +124,6 @@ class News(Base):
     __table_args__ = (
         Index("idx_news_entity_date", "entity_id", "published_date"),
         Index("idx_news_sentiment_date", "sentiment", "published_date"),
-        Index("idx_news_source_date", "source_name", "published_date"),
     )
 
     def __repr__(self):

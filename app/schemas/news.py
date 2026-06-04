@@ -8,11 +8,11 @@ class NewsBase(BaseModel):
     title: str
     url: str
     description: str | None = None
-    published_date: date
+    published_date: datetime
 
     sentiment: str | None = None
 
-    source_name: str | None = None
+    source_id: int
 
     news_metadata: dict | None = None
 

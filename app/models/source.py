@@ -9,7 +9,7 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.enums.source import SourceStatus
@@ -113,4 +113,8 @@ class Source(Base):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
         nullable=False,
+    )
+    news: Mapped[list['News']] = relationship(
+        "News",
+        back_populates="source"
     )

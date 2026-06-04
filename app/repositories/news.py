@@ -1,7 +1,7 @@
 from datetime import date
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.models.news import News
@@ -75,11 +75,25 @@ class NewsRepository:
 
     def list(
         self,
+        company_name: str | None = None,
         offset: int = 0,
         limit: int = 100,
     ) -> list[News]:
+        stmt = select(News)
+        print(f"repo company_name={company_name}")
+        if company_name:
+            search_term = f"%{company_name}%"
+
+            stmt = stmt.where(
+                or_(
+                    News.title.ilike(search_term),
+                    News.description.ilike(search_term),
+                    News.url.ilike(search_term),
+                )
+            )
+
         stmt = (
-            select(News)
+            stmt
             .order_by(News.published_date.desc())
             .offset(offset)
             .limit(limit)

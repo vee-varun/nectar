@@ -85,28 +85,22 @@ docker ps
 ## Create Migration
 
 ```bash
-docker compose exec api alembic revision --autogenerate -m "initial schema"
+docker exec -it news-api alembic revision --autogenerate -m "intial_migrations"
 ```
 
 ## Apply Migration
 
 ```bash
-docker compose exec api alembic upgrade head
+docker exec -it news-api alembic upgrade head
 ```
 
-## Migration History
+## Seed Sources
 
 ```bash
-docker compose exec api alembic history
+docker exec -it news-postgres psql -U postgres -d newsdb < seed_sources.sql
 ```
 
-## Current Version
 
-```bash
-docker compose exec api alembic current
-```
-
----
 
 # Access PostgreSQL
 

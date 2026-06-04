@@ -30,7 +30,7 @@ class NewsService:
             description=news_data.description,
             published_date=news_data.published_date,
             sentiment=news_data.sentiment,
-            source_name=news_data.source_name,
+            source_id=news_data.source_id,
             news_metadata=news_data.news_metadata,
         )
 
@@ -78,10 +78,12 @@ class NewsService:
 
     def list_news(
         self,
+        company_name: str | None = None,
         offset: int = 0,
         limit: int = 100,
     ) -> list[News]:
         return self.repository.list(
+            company_name=company_name,
             offset=offset,
             limit=limit,
         )

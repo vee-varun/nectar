@@ -18,12 +18,17 @@ router = APIRouter(
 )
 def list_news(
     db: DBSession,
+    company_name: str | None = Query(
+        default=None,
+        description="Search in title, description and url",
+    ),
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=1000),
 ):
     service = NewsService(db)
 
     return service.list_news(
+        company_name=company_name,
         offset=offset,
         limit=limit,
     )
