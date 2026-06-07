@@ -7,6 +7,7 @@ from app.api.v1.sources import router as sources_router
 from app.core.scheduler import scheduler
 from app.jobs.rss_runner import run_rss_ingestion
 import app.core.logging
+from app.core.sentiment import get_sentiment_service
 
 app = FastAPI(
     title="News as a Service Lite",
@@ -15,6 +16,8 @@ app = FastAPI(
 @app.on_event("startup")
 def startup_event():
     print("=== STARTUP EVENT FIRED ===")
+
+    get_sentiment_service()
     scheduler.add_job(
         run_rss_ingestion,
         trigger="interval",

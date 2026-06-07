@@ -11,3 +11,7 @@ pydantic-settings
 apscheduler
 feedparser
 ipython
+textblob
+transformers
+torch
+beautifulsoup4

@@ -6,13 +6,20 @@ from sqlalchemy.orm import Session
 from app.repositories.source import SourceRepository
 from app.services.source import SourceService
 from app.models.news import News
+from app.models.news import SentimentEnum
+from app.services.sentiment import SentimentService
+import logging
+from bs4 import BeautifulSoup
+
+
+logger = logging.getLogger(__name__)
 
 class RSSIngestionJob:
     def __init__(self, db: Session):
         self.db = db
         self.source_repo = SourceRepository(db)
         self.source_service = SourceService(self.source_repo)
-
+        self.sentiment_service = SentimentService()
     # -------------------------
     # Public entry point
     # -------------------------
@@ -46,9 +53,23 @@ class RSSIngestionJob:
         title = getattr(entry, "title", None)
         url = getattr(entry, "link", None)
         description = getattr(entry, "description", None)
+        if description:
+            description = BeautifulSoup(description, "html.parser").get_text(separator=" ", strip=True)
 
         if not title or not url:
             return  # skip bad entries
+       
+        sentiment = None
+        if title or description:
+            try:
+                sentiment = self.sentiment_service.analyze(title, description,)
+                if sentiment:
+                    try:
+                        sentiment = SentimentEnum[sentiment.upper()]
+                    except KeyError:
+                        sentiment = None
+            except Exception as err:
+                logger.error(f'Error while analysing the sentiment for the news with URL: {url} | Error: {err}')
 
         # simple dedup (VERY important)
         existing = (
@@ -70,6 +91,7 @@ class RSSIngestionJob:
             source_id=source.id,
             entity_id='11111111-1111-1111-1111-111111111111',
             created_at=datetime.now(timezone.utc),
+            sentiment=sentiment,
         )
 
         self.db.add(news)
